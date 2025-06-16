@@ -6,6 +6,8 @@ module pers.fulsun.cleanpicfxml {
     requires ch.qos.logback.classic;
     requires ch.qos.logback.core;
     requires org.slf4j;
+    requires lombok;
+    requires org.commonmark;
     opens pers.fulsun.cleanpicfxml to javafx.fxml;
     opens pers.fulsun.cleanpicfxml.controller to javafx.fxml;
 

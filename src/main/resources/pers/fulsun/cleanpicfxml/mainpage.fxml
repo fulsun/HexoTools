@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane prefHeight="400.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pers.fulsun.cleanpicfxml.controller.MainPageController">
+<AnchorPane prefHeight="447.0" prefWidth="621.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pers.fulsun.cleanpicfxml.controller.MainPageController">
    <children>
-      <Button fx:id="selectpath" layoutX="512.0" layoutY="29.0" mnemonicParsing="false" onAction="#selectpath" prefHeight="22.0" prefWidth="74.0" text="选择路径" />
+      <Button fx:id="selectpath" layoutX="512.0" layoutY="29.0" mnemonicParsing="false" onAction="#selectmdpath" prefHeight="22.0" prefWidth="74.0" text="选择路径" />
       <Label fx:id="label1" layoutX="31.0" layoutY="33.0" prefHeight="14.0" prefWidth="94.0" text="MD文档路径:" />
       <Label fx:id="label2" layoutX="32.0" layoutY="64.0" text="日志输出路径:" />
       <Button fx:id="savelog" layoutX="512.0" layoutY="60.0" mnemonicParsing="false" onAction="#savelog" prefHeight="22.0" prefWidth="74.0" text="保存日志" />
       <Button fx:id="startclean" layoutX="431.0" layoutY="60.0" mnemonicParsing="false" onAction="#startcleanPicture" prefHeight="22.0" prefWidth="74.0" text="开始执行" />
       <TextField fx:id="logpath" disable="true" layoutX="132.0" layoutY="60.0" prefHeight="22.0" prefWidth="289.0" />
-      <TextArea fx:id="logTextArea" layoutX="32.0" layoutY="125.0" prefHeight="252.0" prefWidth="555.0" promptText="输出日志" />
+      <TextArea fx:id="logTextArea" layoutX="33.0" layoutY="164.0" prefHeight="252.0" prefWidth="555.0" promptText="输出日志" />
       <TextField fx:id="markdownpath" disable="true" editable="false" layoutX="132.0" layoutY="29.0" prefHeight="22.0" prefWidth="373.0" />
-      <RadioButton fx:id="downloadflag" layoutX="140.0" layoutY="93.0" mnemonicParsing="false" text="下载图片到本地" />
-      <RadioButton fx:id="cleanflag" disable="true" layoutX="300.0" layoutY="93.0" mnemonicParsing="false" text="清理失效图片" />
+      <RadioButton fx:id="downloadflag" layoutX="139.0" layoutY="138.0" mnemonicParsing="false" text="下载图片到本地" />
+      <RadioButton fx:id="cleanflag" disable="false" layoutX="257.0" layoutY="138.0" mnemonicParsing="false" text="清理失效图片" />
+      <Button fx:id="selectpath1" layoutX="512.0" layoutY="96.0" mnemonicParsing="false" onAction="#selectgallerypath" prefHeight="22.0" prefWidth="74.0" text="选择路径" />
+      <TextField fx:id="gallerypath" disable="true" editable="false" layoutX="132.0" layoutY="96.0" prefHeight="22.0" prefWidth="373.0" />
+      <Label fx:id="label11" layoutX="31.0" layoutY="100.0" prefHeight="14.0" prefWidth="94.0" text="图库路径:" />
+      <RadioButton id="formatDocumentsUrl" fx:id="formatDocumentsUrl" selected="true" disable="false" layoutX="358.0" layoutY="138.0" mnemonicParsing="false" text="格式化图片链接" />
+      <RadioButton fx:id="cleanUnusedImagesFlag" layoutX="470.0" layoutY="138.0" mnemonicParsing="false" text="清理未使用图片" />
    </children>
 </AnchorPane>
