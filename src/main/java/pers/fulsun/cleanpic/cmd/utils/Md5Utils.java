@@ -20,5 +20,4 @@ public class Md5Utils {
         return hexString.toString();
     }
 
-
 }
