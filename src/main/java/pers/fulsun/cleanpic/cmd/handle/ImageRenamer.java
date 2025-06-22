@@ -1,13 +1,12 @@
 package pers.fulsun.cleanpic.cmd.handle;
 
+import pers.fulsun.cleanpic.cmd.utils.MarkdownFileImageUtils;
 import pers.fulsun.cleanpic.cmd.utils.Md5Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,40 +51,13 @@ public class ImageRenamer {
     }
 
     public void applyRename(Map<String, List<String>> imageRenameMap) {
-        if (imageRenameMap.isEmpty()) {
+        if (imageRenameMap == null || imageRenameMap.isEmpty()) {
             return;
         }
-        // 处理图片名称
-        imageRenameMap.keySet().forEach(file -> {
-            // 打印修复结果
+
+        imageRenameMap.forEach((file, fixStringList) -> {
             System.out.println("重命名文档：" + file);
-            try {
-                // 读取文件
-                Path filePath = Path.of(file);
-                String content = Files.readString(filePath, StandardCharsets.UTF_8);
-                List<String> fixStringList = imageRenameMap.get(file);
-                // 遍历所有需要替换的路径
-                for (String fixString : fixStringList) {
-                    if (fixString != null && !fixString.isBlank()) {
-                        String[] split = fixString.split("=>");
-                        if (split.length == 2) {
-                            String oldUrl = split[0];
-                            String newUrl = split[1];
-                            // 重命名图片
-                            Path oldImagePath = filePath.getParent().resolve(oldUrl);
-                            Path newImagePath = filePath.getParent().resolve(newUrl);
-                            Files.move(oldImagePath, newImagePath, StandardCopyOption.REPLACE_EXISTING);
-                            content = content.replace(oldUrl, newUrl); // 更新 content
-                            System.out.println("\t图片名称：" + oldUrl + " => " + newUrl);
-                        }
-                    }
-                }
-                // 写出文件
-                Files.writeString(filePath, content);
-            } catch (IOException e) {
-                System.err.println("更新文件 " + file + " 失败：" + e.getMessage());
-                e.printStackTrace();
-            }
+            MarkdownFileImageUtils.applyImageRenames(file, fixStringList);
         });
     }
 }

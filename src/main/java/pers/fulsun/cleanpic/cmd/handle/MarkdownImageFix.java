@@ -2,9 +2,9 @@ package pers.fulsun.cleanpic.cmd.handle;
 
 import pers.fulsun.cleanpic.cmd.common.Constant;
 import pers.fulsun.cleanpic.cmd.utils.ImageIndexer;
+import pers.fulsun.cleanpic.cmd.utils.MarkdownFileImageUtils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.Set;
 
 /**
  * 图片修复
@@ -55,7 +54,7 @@ public class MarkdownImageFix {
         fix(checkResult, galleryDirectory);
     }
 
-    
+
     /**
      * 修复函数，根据检查结果更新图库索引和Markdown文件中的图片链接
      *
@@ -101,34 +100,13 @@ public class MarkdownImageFix {
 
 
     private void updateMarkdownFiles(Map<String, List<String>> fixMap) {
-        Set<String> files = fixMap.keySet();
-        files.forEach(file -> {
-            // 打印修复结果
-            System.out.println("修复文件：" + file);
-            try {
-                // 读取文件
-                Path filePath = Path.of(file);
-                String content = Files.readString(filePath, StandardCharsets.UTF_8);
-                List<String> fixStringList = fixMap.get(file);
-                // 遍历所有需要替换的路径
-                for (String fixString : fixStringList) {
-                    if (fixString != null && !fixString.isBlank()) {
-                        String[] split = fixString.split("=>");
-                        if (split.length == 2) {
-                            String oldUrl = split[0];
-                            String newUrl = split[1];
-                            content = content.replace(oldUrl, newUrl); // 更新 content
-                            System.out.println("\t图片更新：" + oldUrl + " => " + newUrl);
-                        }
-                    }
-                }
-                // 写出文件
-                Files.writeString(filePath, content);
+        if (fixMap == null || fixMap.isEmpty()) {
+            return;
+        }
 
-            } catch (IOException e) {
-                System.err.println("更新文件 " + file + " 失败：" + e.getMessage());
-                e.printStackTrace();
-            }
+        fixMap.forEach((file, fixStringList) -> {
+            System.out.println("更新文档：" + file);
+            MarkdownFileImageUtils.applyImageCopies(file, fixStringList);
         });
     }
 
