@@ -2,17 +2,20 @@ package pers.fulsun.cleanpic.cmd;
 
 import pers.fulsun.cleanpic.cmd.common.Constant;
 import pers.fulsun.cleanpic.cmd.handle.ImageRenamer;
+import pers.fulsun.cleanpic.cmd.handle.MarkdownDuplicateCleaner;
 import pers.fulsun.cleanpic.cmd.handle.MarkdownImageChecker;
 import pers.fulsun.cleanpic.cmd.handle.MarkdownImageFix;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class StartCheck {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         // 接受一个_post目录
         Scanner inputScanner = new Scanner(System.in);
@@ -51,7 +54,7 @@ public class StartCheck {
         }
     }
 
-    private static void showMenu(Scanner scanner, String mdDir) {
+    private static void showMenu(Scanner scanner, String mdDir) throws Exception {
         clearConsole(); // 先清屏
         System.out.println("========请选择要执行的功能============");
         System.out.println("1. 检测图片");
@@ -59,7 +62,9 @@ public class StartCheck {
         System.out.println("3. 检测图片并修复并下载网络图片");
         System.out.println("4. 检测图片并修复并下载网络图片并格式化文档");
         System.out.println("5. 采用MD5重命名图片");
-        System.out.println("6. 退出");
+        System.out.println("6. Markdonw文件去重");
+
+        System.out.println("9. 退出");
         System.out.print("请输入您的选择: ");
 
         // 验证用户输入是否为有效整数
@@ -87,12 +92,24 @@ public class StartCheck {
                 renameMdImageName(mdDir);
                 break;
             case 6:
+                markdownDuplicateCleaner(mdDir);
+                break;
+            case 9:
                 System.out.println("退出程序");
                 System.exit(0);
                 break;
             default:
                 System.out.println("无效的选择，请重新输入！");
         }
+    }
+
+    private static void markdownDuplicateCleaner(String postsDirectory) throws IOException, NoSuchAlgorithmException {
+        System.out.println("正在检测重复的markdown...");
+        // 调用 handle 包中的具体操作类
+        MarkdownDuplicateCleaner.removeDuplicate(postsDirectory);
+        // 此处可添加相应的调用逻辑
+        System.out.println("操作完成。");
+        waitForUserInput();
     }
 
     private static void renameMdImageName(String postsDirectory) {
