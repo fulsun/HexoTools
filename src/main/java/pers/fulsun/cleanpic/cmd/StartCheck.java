@@ -104,38 +104,26 @@ public class StartCheck {
     }
 
     private static void handleCheckAndFix(String postsDirectory) {
-        // 输入图库路径
-        Scanner inputScanner = new Scanner(System.in);
-        System.out.print("请输入图库路径：");
-        String galleryDirectory = inputScanner.nextLine();
-        // 指定默认
-        galleryDirectory = galleryDirectory.isEmpty() ? "C:\\Users\\fulsun\\Pictures\\unused-images" : galleryDirectory;
-        if (!Path.of(galleryDirectory).toFile().exists()) {
-            System.out.println("图库路径不存在！");
-            return;
-        }
-        System.out.println("》》》》》 正在检测图片并修复本地文件...");
-        // 实现具体逻辑
-        Map<String, Map<String, List<String>>> checkResult = new MarkdownImageChecker().check(Path.of(postsDirectory));
-        if (checkResult == null || checkResult.isEmpty()) {
-            return;
-        } else {
-            new MarkdownImageFix().fix(checkResult, galleryDirectory);
-        }
+        System.out.println("正在检测图片并修复...");
+        // 调用 handle 包中的具体操作类
+        new MarkdownImageFix().fix(postsDirectory);
+        // 此处可添加相应的调用逻辑
         System.out.println("操作完成。");
         waitForUserInput();
     }
 
     private static void handleCheckAndFixAndDownload(String mdDir) {
         System.out.println("正在检测图片并修复，并下载网络图片...");
-        // 实现具体逻辑
+        // 调用 handle 包中的具体操作类
+        // 此处可添加相应的调用逻辑
         System.out.println("操作完成。");
         waitForUserInput();
     }
 
     private static void handleCheckAndFixAndDownloadAndFormat(String mdDir) {
         System.out.println("正在检测图片并修复，下载网络图片，并格式化文档...");
-        // 实现具体逻辑
+        // 调用 handle 包中的具体操作类
+        // 此处可添加相应的调用逻辑
         System.out.println("操作完成。");
         waitForUserInput();
     }
