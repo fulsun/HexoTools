@@ -26,6 +26,7 @@ public class ImageRenamer {
                 Set<String> imageUrls = markdownImageChecker.extractImagePathsFromMarkdown(file);
                 imageUrls.forEach(imageUrl -> {
                     // 获取图片
+                    imageUrl = imageUrl.replace("\\", "/").replace("./", "");
                     Path imagePath = Path.of(file.getParent()).resolve(imageUrl);
                     if (Files.exists(imagePath)) {
                         // 获取MD5

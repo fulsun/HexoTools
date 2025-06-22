@@ -24,10 +24,8 @@ public class MarkdownImageFix {
 
 
     public void fix(String postsDirectory) {
-        Scanner inputScanner = new Scanner(System.in);
         System.out.print("请输入图库路径：");
-        String galleryDirectory = inputScanner.nextLine().trim();
-        inputScanner.close();
+        String galleryDirectory = new Scanner(System.in).nextLine().trim();
 
         // 指定默认路径
         if (galleryDirectory.isEmpty()) {
