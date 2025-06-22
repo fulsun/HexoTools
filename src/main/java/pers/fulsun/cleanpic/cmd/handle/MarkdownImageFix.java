@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -25,6 +24,38 @@ import java.util.Set;
 public class MarkdownImageFix {
 
 
+    public void fix(String postsDirectory) {
+        Scanner inputScanner = new Scanner(System.in);
+        System.out.print("请输入图库路径：");
+        String galleryDirectory = inputScanner.nextLine().trim();
+        inputScanner.close();
+
+        // 指定默认路径
+        if (galleryDirectory.isEmpty()) {
+            galleryDirectory = "C:\\Users\\fulsun\\Pictures\\unused-images";
+        }
+
+        // 验证路径有效性
+        try {
+            if (!Files.exists(Path.of(galleryDirectory))) {
+                System.out.println("图库路径不存在！");
+                return;
+            }
+        } catch (InvalidPathException e) {
+            System.out.println("图库路径无效：" + e.getMessage());
+            return;
+        }
+
+        // 实现具体逻辑
+        Map<String, Map<String, List<String>>> checkResult = new MarkdownImageChecker().check(Path.of(postsDirectory));
+        if (checkResult == null || checkResult.isEmpty()) {
+            return;
+        }
+
+        fix(checkResult, galleryDirectory);
+    }
+
+    
     /**
      * 修复函数，根据检查结果更新图库索引和Markdown文件中的图片链接
      *
@@ -38,18 +69,18 @@ public class MarkdownImageFix {
             ImageIndexer indexer = ImageIndexer.getInstance();
             indexer.buildIndex(grallyDir);
         }
-
-        // 创建一个映射用于存储待修复的图片信息
-        Map<String, List<String>> fixMap = new HashMap<>();
-        // 处理失效的图片
-        handleInvalidImages(checkResult, fixMap);
-        // 根据fixmap修改markdown文件
-        updateMarkdownFiles(fixMap);
-
         // 缓存get结果，避免多次调用
         Map<String, List<String>> invalidImages = checkResult.getOrDefault(Constant.INVALID_IMAGES, Collections.emptyMap());
         Map<String, List<String>> invalidRemoteImages = checkResult.getOrDefault(Constant.INVALID_REMOTE_IMAGES, Collections.emptyMap());
         Map<String, List<String>> usedImages = checkResult.getOrDefault(Constant.USED_IMAGES, Collections.emptyMap());
+
+
+        // 创建一个映射用于存储待修复的图片信息
+        Map<String, List<String>> fixMap = new HashMap<>();
+        // 处理失效的图片
+        handleInvalidImages(invalidImages, fixMap);
+        // 根据fixmap修改markdown文件
+        updateMarkdownFiles(fixMap);
 
         // 打印结果，防止传入null导致异常
         MarkdownImageChecker.printCheckResult(invalidImages, invalidRemoteImages, usedImages);
@@ -101,75 +132,48 @@ public class MarkdownImageFix {
         });
     }
 
-    private void handleInvalidImages(Map<String, Map<String, List<String>>> checkResult, Map<String, List<String>> fixMap) {
-        Map<String, List<String>> invalidImages = checkResult.get(Constant.INVALID_IMAGES);
-        Set<String> fileSet = invalidImages.keySet();
-        for (String file : fileSet) {
-            // 处理失效的图片
-            Optional.ofNullable(invalidImages.get(file)).ifPresent(invalidImageList -> {
-                List<String> successList = new ArrayList<>();
-                invalidImageList.forEach(path -> {
-                    ImageIndexer instance = ImageIndexer.getInstance();
-                    String filename = path.replace("\\", "/");
-                    if (filename.contains("/")) {
-                        filename = path.substring(path.lastIndexOf("/") + 1);
-                    }
-                    String imagePath = instance.getImagePath(filename);
-                    if (imagePath != null) {
-                        Path serarchImagePath = Path.of(imagePath);
-                        if (serarchImagePath.toFile().exists()) {
-                            // 复制图片
-                            try {
-                                // 创建目录
-                                Path parent = Files.createDirectories(Path.of(file.replace(".md", "")));
-                                String mdfilename = Path.of(file).getFileName().toString().replace(".md", "");
-                                Files.copy(serarchImagePath, parent.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-                                fixMap.computeIfAbsent(file, v -> new ArrayList<>()).add(path + "=>" + mdfilename + "/" + filename);
-                                successList.add(path);
-                            } catch (IOException e) {
-                                System.out.println("复制图片失败：" + filename);
-                            }
-                        }
-                    } else {
-                        // System.out.println("图库不存在图片：" + path);
-                    }
-                });
-                invalidImageList.removeAll(successList);
+    private void handleInvalidImages(Map<String, List<String>> invalidImages, Map<String, List<String>> fixMap) {
+        if (fixMap == null) {
+            throw new IllegalArgumentException("fixMap 不能为空");
+        }
+        if (invalidImages == null) return;
+
+        ImageIndexer imageIndexer = ImageIndexer.getInstance();
+
+        for (String file : invalidImages.keySet()) {
+            List<String> invalidImageList = invalidImages.get(file);
+            if (invalidImageList == null || invalidImageList.isEmpty()) continue;
+            invalidImageList.removeIf(path -> {
+                Path imagePathObj = processImagePath(path, imageIndexer);
+                if (imagePathObj == null || !imagePathObj.toFile().exists()) {
+                    return false;
+                }
+
+                try {
+                    String filename = imagePathObj.getFileName().toString();
+                    Path targetDir = Files.createDirectories(Path.of(file.replace(".md", "")));
+                    String mdfilename = Path.of(file).getFileName().toString().replace(".md", "");
+
+                    Path targetPath = targetDir.resolve(filename);
+                    Files.copy(imagePathObj, targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+                    fixMap.computeIfAbsent(file, v -> new ArrayList<>()).add(path + "=>" + mdfilename + "/" + filename);
+                    return true; // 表示该元素会被移除
+                } catch (IOException e) {
+                    System.err.println("复制图片失败：" + imagePathObj.getFileName());
+                    return false;
+                }
             });
-
-
         }
     }
 
-
-    public void fix(String postsDirectory) {
-        Scanner inputScanner = new Scanner(System.in);
-        System.out.print("请输入图库路径：");
-        String galleryDirectory = inputScanner.nextLine().trim();
-        inputScanner.close();
-
-        // 指定默认路径
-        if (galleryDirectory.isEmpty()) {
-            galleryDirectory = "C:\\Users\\fulsun\\Pictures\\unused-images";
-        }
-
-        // 验证路径有效性
-        try {
-            if (!Files.exists(Path.of(galleryDirectory))) {
-                System.out.println("图库路径不存在！");
-                return;
-            }
-        } catch (InvalidPathException e) {
-            System.out.println("图库路径无效：" + e.getMessage());
-            return;
-        }
-
-        // 实现具体逻辑
-        Map<String, Map<String, List<String>>> checkResult = new MarkdownImageChecker().check(Path.of(postsDirectory));
-        if (checkResult == null || checkResult.isEmpty()) {
-            return;
-        }
-
-        fix(checkResult, galleryDirectory);
+    // 抽取路径处理逻辑，便于复用和测试
+    private Path processImagePath(String path, ImageIndexer imageIndexer) {
+        Path normalizedPath = Path.of(path.replace("\\", "/"));
+        String filename = normalizedPath.getFileName().toString();
+        String imagePath = imageIndexer.getImagePath(filename);
+        return imagePath == null ? null : Path.of(imagePath);
     }
+
+
 }
