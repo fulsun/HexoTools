@@ -37,14 +37,14 @@ public class HexoImageChecker {
         this.logService = logService;
     }
 
-    public static void  main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         // 解析命令行参数
-        boolean autoFix = false;
-        boolean renameImages = false;
+        boolean autoFix = true;
+        boolean renameImages = true;
         boolean downloadWebImages = false;
-        boolean formatDocuments = false;
+        boolean formatDocuments = true;
         String galleryPath = null;
-        
+
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if ("-fix".equals(arg)) {
@@ -66,12 +66,12 @@ public class HexoImageChecker {
                 }
             }
         }
-        
+
         if (galleryPath == null) {
             System.err.println("请使用 -gallery 参数指定图库目录");
             return;
         }
-        
+
         Path galleryDir = Paths.get(galleryPath);
         if (!Files.isDirectory(galleryDir)) {
             System.err.println("指定的图库目录不存在: " + galleryDir);
@@ -79,7 +79,7 @@ public class HexoImageChecker {
         }
 
         // 创建配置
-        Path postsDir = Paths.get("C:\\Users\\fulsun\\blog2\\source\\_posts");
+        Path postsDir = Paths.get("C:\\Users\\fulsun\\Documents\\Github\\hexo\\source\\_posts");
         Configuration config = new Configuration(autoFix, renameImages, downloadWebImages, formatDocuments, postsDir, ERROR_LOG_FILE, galleryDir);
 
         // 初始化服务
