@@ -1,4 +1,4 @@
-package pers.fulsun.cleanpic.cmd.utils;
+package pers.fulsun.hexotools.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ImageValidationService {
+public class ImageValidationUtils {
 
 
     public boolean isRemoteImageValid(String imageUrl) {

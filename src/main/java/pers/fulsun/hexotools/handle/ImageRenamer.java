@@ -1,7 +1,7 @@
-package pers.fulsun.cleanpic.cmd.handle;
+package pers.fulsun.hexotools.handle;
 
-import pers.fulsun.cleanpic.cmd.utils.MarkdownFileImageUtils;
-import pers.fulsun.cleanpic.cmd.utils.Md5Utils;
+import pers.fulsun.hexotools.utils.MarkdownFileImageUtils;
+import pers.fulsun.hexotools.utils.Md5Utils;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package pers.fulsun.cleanpic.cmd.common;
+package pers.fulsun.hexotools.common;
 
 /**
  * 常量

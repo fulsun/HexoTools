@@ -1,11 +1,11 @@
-package pers.fulsun.cleanpic.cmd;
+package pers.fulsun.hexotools;
 
-import pers.fulsun.cleanpic.cmd.common.Constant;
-import pers.fulsun.cleanpic.cmd.handle.HexoTimeUpdater;
-import pers.fulsun.cleanpic.cmd.handle.ImageRenamer;
-import pers.fulsun.cleanpic.cmd.handle.MarkdownDuplicateCleaner;
-import pers.fulsun.cleanpic.cmd.handle.MarkdownImageChecker;
-import pers.fulsun.cleanpic.cmd.handle.MarkdownImageFix;
+import pers.fulsun.hexotools.common.Constant;
+import pers.fulsun.hexotools.handle.HexoTimeUpdater;
+import pers.fulsun.hexotools.handle.ImageRenamer;
+import pers.fulsun.hexotools.handle.MarkdownDuplicateCleaner;
+import pers.fulsun.hexotools.handle.MarkdownImageChecker;
+import pers.fulsun.hexotools.handle.MarkdownImageFix;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,14 +15,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class StartCheck {
+public class HexoTools {
     public static void main(String[] args) throws Exception {
 
         // 接受一个_post目录
         Scanner inputScanner = new Scanner(System.in);
         System.out.print("请输入_post目录: ");
         String inputDir = inputScanner.nextLine();
-        String postsDirectory = inputDir == null || inputDir.trim().isEmpty() ? "C:\\Users\\fulsun\\Documents\\Github\\hexo\\source\\_posts" : inputDir;
+        String postsDirectory = inputDir == null || inputDir.trim().isEmpty() ? "_post" : inputDir;
         System.out.println("您输入的_post目录为: " + postsDirectory);
 
         // 检查目录是否存在

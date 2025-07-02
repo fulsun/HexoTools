@@ -1,8 +1,8 @@
-package pers.fulsun.cleanpic.cmd.handle;
+package pers.fulsun.hexotools.handle;
 
-import pers.fulsun.cleanpic.cmd.common.Constant;
-import pers.fulsun.cleanpic.cmd.utils.ImageIndexer;
-import pers.fulsun.cleanpic.cmd.utils.MarkdownFileImageUtils;
+import pers.fulsun.hexotools.common.Constant;
+import pers.fulsun.hexotools.utils.ImageIndexer;
+import pers.fulsun.hexotools.utils.MarkdownFileImageUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +29,7 @@ public class MarkdownImageFix {
 
         // 指定默认路径
         if (galleryDirectory.isEmpty()) {
-            galleryDirectory = "C:\\Users\\fulsun\\Pictures\\unused-images";
+            galleryDirectory = "unused-images";
         }
 
         // 验证路径有效性

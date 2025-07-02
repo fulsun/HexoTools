@@ -1,4 +1,4 @@
-package pers.fulsun.cleanpic.cmd.utils;
+package pers.fulsun.hexotools.utils;
 
 import java.io.File;
 import java.io.IOException;

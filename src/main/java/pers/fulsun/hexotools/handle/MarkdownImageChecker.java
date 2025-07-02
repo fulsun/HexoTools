@@ -1,12 +1,12 @@
-package pers.fulsun.cleanpic.cmd.handle;
+package pers.fulsun.hexotools.handle;
 
 import org.apache.commons.io.FileUtils;
 import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.Image;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
-import pers.fulsun.cleanpic.cmd.common.Constant;
-import pers.fulsun.cleanpic.cmd.utils.ImageValidationService;
+import pers.fulsun.hexotools.common.Constant;
+import pers.fulsun.hexotools.utils.ImageValidationUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -126,7 +126,7 @@ public class MarkdownImageChecker {
         if (allImages.isEmpty()) {
             return;
         }
-        ImageValidationService validationService = new ImageValidationService();
+        ImageValidationUtils validationService = new ImageValidationUtils();
         // 本地通过检查markdown同名路径下
         validationService.checkImagesBySameMdNamePath(allImages, md, invalidImages, invalidRemoteImages, useImages);
     }
